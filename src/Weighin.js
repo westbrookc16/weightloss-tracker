@@ -46,7 +46,7 @@ const Weighin = () => {
 		form.heightFeet = parseInt(form.heightFeet);
 		form.heightIn = parseInt(form.heightIn);
 		form.weight = parseInt(form.weight);
-		form.date = moment(month, day, year);
+		form.date = moment(month, day, year).date();
 		if (user.weight) {
 			form.difference = user.weight - form.weight;
 		}
