@@ -5,7 +5,7 @@ import Status from './Status';
 const Home = () => {
 	const main = React.createRef(null);
 	useEffect(() => {
-		//main.current.focus();
+		main.current.focus();
 		document.title = 'Home';
 	}, [main]);
 	const user = useContext(UserContext);
