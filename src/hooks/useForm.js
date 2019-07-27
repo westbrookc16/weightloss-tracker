@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { async } from 'q';
 
 const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 	const [form, setForm] = useState(initialValues);
@@ -21,7 +20,7 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 			return { ...state, [e.target.name]: e.target.value };
 		});
 	};
-	const handleSubmit = async e => {
+	const handleSubmit = e => {
 		console.log('submitting...');
 		setSubmitting(true);
 
@@ -29,7 +28,7 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 		validate();
 		//
 		if (Object.keys(errors).length === 0) {
-			let condition = handleSubmitCallback().then(res => {
+			handleSubmitCallback().then(res => {
 				console.log('Resolve', res);
 				setSuccess(res);
 			}); // go test now
@@ -39,7 +38,7 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 			// the result in my test was false, can you submit the form with valid data?
 			//valid data should be a posative number in theweight field. N sure why that is still returning falseot
 			//setSuccess(false);
-			console.log('handle submit callback running.', condition);
+
 			setSubmitting(false);
 		} else {
 			setSubmitting(false);

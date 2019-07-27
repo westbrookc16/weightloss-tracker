@@ -4,8 +4,7 @@ import { UserContext } from './firebase/FirebaseUser';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import useForm from './hooks/useForm';
-import { async } from 'q';
-import { resolve } from 'url';
+
 const Weighin = () => {
 	const firebase = useContext(FirebaseContext);
 	const user = useContext(UserContext);
@@ -66,8 +65,7 @@ const Weighin = () => {
 					resolve(false);
 				});
 			//console.log(`submitSuccess=${submitSuccess}`);
-			//is my code that bad/ lol. lol nope its pretty decent actually
-			// i will wrap this in a promise now
+
 			//return submitSuccess;
 		});
 	};
