@@ -38,7 +38,7 @@ const Viewweighins = () => {
 							const { date, weight, difference } = data;
 							return (
 								<tr key={doc.id}>
-									<td>{moment(date.toDate()).format('MM/DD/YYYY HH:MM')}</td>
+									<td>{moment(date.toDate()).format('MM/DD/YYYY')}</td>
 									<td>{weight}</td>
 									<td>{difference}</td>
 								</tr>

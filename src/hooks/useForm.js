@@ -20,26 +20,15 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 			return { ...state, [e.target.name]: e.target.value };
 		});
 	};
-	const handleSubmit = e => {
-		console.log('submitting...');
+	const handleSubmit = async e => {
 		setSubmitting(true);
 
 		e.preventDefault();
 		validate();
 		//
 		if (Object.keys(errors).length === 0) {
-			handleSubmitCallback().then(res => {
-				console.log('Resolve', res);
-				setSuccess(res);
-			}); // go test now
-			// is it validatig as you like?
-			//well I wanted it to set success to true so my redirect component from react-router-dom would redirect back to the home page upon successful submission.
-			//is that a different problem?
-			// the result in my test was false, can you submit the form with valid data?
-			//valid data should be a posative number in theweight field. N sure why that is still returning falseot
-			//setSuccess(false);
-
 			setSubmitting(false);
+			setSuccess(await handleSubmitCallback());
 		} else {
 			setSubmitting(false);
 			//setSuccess(false);
@@ -55,6 +44,7 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
 		});
 		validate();
 	};
+
 	return {
 		handleChange,
 		handleBlur,

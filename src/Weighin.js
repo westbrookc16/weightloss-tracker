@@ -27,13 +27,13 @@ const Weighin = () => {
 	}, []);
 	// this function is a promise where are using it part from here?
 	//in the useForm hok. LEt me show you.
-	const handleSubmitCallback = () => {
+	const handleSubmitCallback = async () => {
 		return new Promise((resolve, reject) => {
 			//turn variables into numbers for firebase
 			form.heightFeet = parseInt(form.heightFeet);
 			form.heightIn = parseInt(form.heightIn);
 			form.weight = parseInt(form.weight);
-			form.date = moment(month, day, year).date();
+			form.date = new Date(year, parseInt(month) - 1, day, 0, 0, 0,0);
 			if (user.weight) {
 				form.difference = user.weight - form.weight;
 			}
@@ -45,28 +45,20 @@ const Weighin = () => {
 			let totalHeight = form.heightFeet * 12 + form.heightIn;
 			form.bmi = 703 * (form.weight / (totalHeight * totalHeight));
 			//let submitSuccess = false;
-			firebase.db
-				.collection('users')
-				.doc(user.uid)
-				.set({ ...form })
-				.then(u => {
-					user.setProfileData(form);
-					form.uid = user.uid;
-					firebase.db
-						.collection('weighins')
-						.add(form)
-						.then(u => {
-							console.log(`setting submit success`);
-							resolve(true);
-						});
-				})
-				.catch(e => {
-					console.log(e, 'Error here');
-					resolve(false);
-				});
-			//console.log(`submitSuccess=${submitSuccess}`);
+			try {
+				firebase.db
+					.collection('users')
+					.doc(user.uid)
+					.set({ ...form });
 
-			//return submitSuccess;
+				user.setProfileData(form);
+				form.uid = user.uid;
+				firebase.db.collection('weighins').add(form);
+				resolve(true);
+			} catch (e) {
+				console.log(`error=${e}`);
+				resolve(false);
+			}
 		});
 	};
 	const validationCallback = () => {
@@ -78,7 +70,7 @@ const Weighin = () => {
 		return errors;
 	};
 
-	const { handleChange, handleSubmit, handleBlur, setForm, form, errors, touched, success, submitting } = useForm(
+	const { handleChange, handleSubmit, handleBlur, setForm, form, errors, success, submitting } = useForm(
 		handleSubmitCallback,
 		validationCallback,
 		initialValues
@@ -93,7 +85,7 @@ const Weighin = () => {
 	}, [user, setForm]);
 
 	const { heightFeet, heightIn, weight, day, month, year } = form;
-	console.log(`success=${success}`);
+
 	return (
 		<div>
 			{success && <Redirect to="/" />}
