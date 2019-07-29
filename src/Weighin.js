@@ -26,14 +26,14 @@ const Weighin = () => {
 		main.current.focus();
 	}, []);
 	// this function is a promise where are using it part from here?
-	//in the useForm hok. LEt me show you.
+
 	const handleSubmitCallback = async () => {
 		return new Promise((resolve, reject) => {
 			//turn variables into numbers for firebase
 			form.heightFeet = parseInt(form.heightFeet);
 			form.heightIn = parseInt(form.heightIn);
 			form.weight = parseInt(form.weight);
-			form.date = new Date(year, parseInt(month) - 1, day, 0, 0, 0,0);
+			form.date = new Date(year, parseInt(month) - 1, day, 0, 0, 0, 0);
 			if (user.weight) {
 				form.difference = user.weight - form.weight;
 			}
@@ -42,8 +42,7 @@ const Weighin = () => {
 				form.startWeight = form.weight;
 				form.startDate = new Date();
 			}
-			let totalHeight = form.heightFeet * 12 + form.heightIn;
-			form.bmi = 703 * (form.weight / (totalHeight * totalHeight));
+
 			//let submitSuccess = false;
 			try {
 				firebase.db
@@ -64,6 +63,9 @@ const Weighin = () => {
 	const validationCallback = () => {
 		let errors = {};
 
+		if (form.weight === '') {
+			errors.weight = 'You must enter a weight.';
+		}
 		if (parseInt(form.weight) < 0) {
 			errors.weight = 'Your weight must be positive';
 		}
@@ -192,18 +194,34 @@ const Weighin = () => {
 						onChange={handleChange}
 						name="weight"
 						value={weight}
-						onBlur={handleBlur}
+						onBlur={e => {
+							if (parseInt(e.target.value) > 0) {
+								let totalHeight = form.heightFeet * 12 + form.heightIn;
+								form.bmi = 703 * (e.target.value / (totalHeight * totalHeight));
+							} else {
+								form.bmi = '';
+							}
+							setForm(form);
+
+							handleBlur(e);
+						}}
 					/>
 				</p>
 				<button type="submit" disabled={submitting}>
 					Submit
 				</button>
 			</form>
-			<ul>
-				{Object.keys(errors).map((field, i) => {
-					return <li key={i}>{errors[field]}</li>;
-				})}
-			</ul>
+			<div aria-live="polite">
+				<div aria-atomic="true">
+					{parseInt(weight) > 0 && form.bmi !== '' && <>Your bmi is {parseFloat(form.bmi).toFixed(2)}</>}
+				</div>
+				<br />
+				<ul>
+					{Object.keys(errors).map((field, i) => {
+						return <li key={i}>{errors[field]}</li>;
+					})}
+				</ul>
+			</div>
 		</div>
 	);
 };
