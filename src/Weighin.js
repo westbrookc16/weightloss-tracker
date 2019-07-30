@@ -28,37 +28,35 @@ const Weighin = () => {
 	// this function is a promise where are using it part from here?
 
 	const handleSubmitCallback = async () => {
-		return new Promise((resolve, reject) => {
-			//turn variables into numbers for firebase
-			form.heightFeet = parseInt(form.heightFeet);
-			form.heightIn = parseInt(form.heightIn);
-			form.weight = parseInt(form.weight);
-			form.date = new Date(year, parseInt(month) - 1, day, 0, 0, 0, 0);
-			if (user.weight) {
-				form.difference = user.weight - form.weight;
-			}
-			//set initial values if it is first submission
-			if (!user.bmi) {
-				form.startWeight = form.weight;
-				form.startDate = new Date();
-			}
+		//turn variables into numbers for firebase
+		form.heightFeet = parseInt(form.heightFeet);
+		form.heightIn = parseInt(form.heightIn);
+		form.weight = parseInt(form.weight);
+		form.date = new Date(year, parseInt(month) - 1, day, 0, 0, 0, 0);
+		if (user.weight) {
+			form.difference = user.weight - form.weight;
+		}
+		//set initial values if it is first submission
+		if (!user.bmi) {
+			form.startWeight = form.weight;
+			form.startDate = new Date();
+		}
 
-			//let submitSuccess = false;
-			try {
-				firebase.db
-					.collection('users')
-					.doc(user.uid)
-					.set({ ...form });
+		//let submitSuccess = false;
+		try {
+			firebase.db
+				.collection('users')
+				.doc(user.uid)
+				.set({ ...form });
 
-				user.setProfileData(form);
-				form.uid = user.uid;
-				firebase.db.collection('weighins').add(form);
-				resolve(true);
-			} catch (e) {
-				console.log(`error=${e}`);
-				resolve(false);
-			}
-		});
+			user.setProfileData(form);
+			form.uid = user.uid;
+			firebase.db.collection('weighins').add(form);
+			return true;
+		} catch (e) {
+			console.log(`error=${e}`);
+			return false;
+		}
 	};
 	const validationCallback = () => {
 		let errors = {};
@@ -72,7 +70,7 @@ const Weighin = () => {
 		return errors;
 	};
 
-	const { handleChange, handleSubmit, handleBlur, setForm, form, errors, success, submitting } = useForm(
+	const { handleChange, handleSubmit, handleBlur, setForm, form, errors, success, submitting, touched } = useForm(
 		handleSubmitCallback,
 		validationCallback,
 		initialValues
@@ -218,7 +216,8 @@ const Weighin = () => {
 				<br />
 				<ul>
 					{Object.keys(errors).map((field, i) => {
-						return <li key={i}>{errors[field]}</li>;
+						if (touched[field]) return <li key={i}>{errors[field]}</li>;
+						else return <div />;
 					})}
 				</ul>
 			</div>
