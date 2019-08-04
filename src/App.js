@@ -10,23 +10,27 @@ import SignIn from './SignIn';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import './App.css';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 
 function App() {
 	return (
-		<div className="app">
+		<Container maxWidth="sm">
 			<FirebaseContext.Provider value={new firebase()}>
 				<FirebaseUser>
 					<Router>
 						<Nav />
-						<Route path="/" exact component={Home} />
-						<Route path="/signin" component={SignIn} />
-						<Route path="/weighin" component={Weighin} />
-						<Route path="/about" component={About} />
-						<Route path="/viewWeighins" component={ViewWeighIns} />
+						<Box my={4}>
+							<Route path="/" exact component={Home} />
+							<Route path="/signin" component={SignIn} />
+							<Route path="/weighin" component={Weighin} />
+							<Route path="/about" component={About} />
+							<Route path="/viewWeighins" component={ViewWeighIns} />
+						</Box>
 					</Router>
 				</FirebaseUser>
 			</FirebaseContext.Provider>
-		</div>
+		</Container>
 	);
 }
 

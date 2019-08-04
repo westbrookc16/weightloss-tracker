@@ -6,9 +6,10 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 const Signin = ({ history }) => {
 	const main = React.useRef(null);
 	const firebase = useContext(FirebaseContext);
-	//const user = useContext(UserContext);
+
 	useEffect(() => {
 		main.current.focus();
+		document.title = 'Sgin In';
 	}, []);
 
 	const uiConfig = {
@@ -19,7 +20,7 @@ const Signin = ({ history }) => {
 
 		signInOptions: [firebase.googleProvider, firebase.emailProvider],
 	};
-	//const user = useCOntxt(UserContext);
+
 	return (
 		<div id="signin">
 			<h1 tabIndex="-1" ref={main}>

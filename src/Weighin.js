@@ -1,11 +1,35 @@
 import React, { useContext, useEffect } from 'react';
+import { calcBmi } from './utils';
 import { FirebaseContext } from './firebase/firebase';
 import { UserContext } from './firebase/FirebaseUser';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import useForm from './hooks/useForm';
-
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 const Weighin = () => {
+	const useStyles = makeStyles(theme => ({
+		container: {
+			display: 'flex',
+			flexWrap: 'wrap',
+		},
+		textField: {
+			marginLeft: theme.spacing(1),
+			marginRight: theme.spacing(1),
+			width: 200,
+		},
+		dense: {
+			marginTop: 19,
+		},
+		menu: {
+			width: 200,
+		},
+		button: {
+			margin: theme.spacing(1),
+		},
+	}));
+
 	const firebase = useContext(FirebaseContext);
 	const user = useContext(UserContext);
 	//ref for main element getting initial  focus
@@ -85,7 +109,7 @@ const Weighin = () => {
 	}, [user, setForm]);
 
 	const { heightFeet, heightIn, weight, day, month, year } = form;
-
+	const classes = useStyles();
 	return (
 		<div>
 			{success && <Redirect to="/" />}
@@ -96,28 +120,26 @@ const Weighin = () => {
 			<form onSubmit={handleSubmit}>
 				{!user.bmi && (
 					<div>
-						<p>
-							<label htmlFor="heightFeet">Height (Feet)</label>
-							<input
-								type="text"
-								id="heightFeet"
-								onChange={handleChange}
-								name="heightFeet"
-								value={heightFeet}
-								onBlur={handleBlur}
-							/>
-						</p>
-						<p>
-							<label htmlFor="heightIn">Height (In)</label>
-							<input
-								type="text"
-								id="heightIn"
-								onChange={handleChange}
-								name="heightIn"
-								value={heightIn}
-								onBlur={handleBlur}
-							/>
-						</p>
+						<TextField
+							id="heightFeet"
+							name="heightFeet"
+							onChange={handleChange}
+							onBlur={handleBlur}
+							value={heightFeet}
+							label="Height (Feet)"
+							className={classes.textField}
+							margin="normal"
+						/>
+						<TextField
+							id="heightIn"
+							name="heightIn"
+							onChange={handleChange}
+							onBlur={handleBlur}
+							value={heightIn}
+							label="Height (In)"
+							className={classes.textField}
+							margin="normal"
+						/>
 					</div>
 				)}
 				<fieldset>
@@ -184,30 +206,27 @@ const Weighin = () => {
 						</select>
 					</p>
 				</fieldset>
-				<p>
-					<label htmlFor="weight">Weight</label>
-					<input
-						type="text"
-						id="weight"
-						onChange={handleChange}
-						name="weight"
-						value={weight}
-						onBlur={e => {
-							if (parseInt(e.target.value) > 0) {
-								let totalHeight = form.heightFeet * 12 + form.heightIn;
-								form.bmi = 703 * (e.target.value / (totalHeight * totalHeight));
-							} else {
-								form.bmi = '';
-							}
-							setForm(form);
+				<TextField
+					id="weight"
+					name="weight"
+					onChange={handleChange}
+					onBlur={e => {
+						handleBlur(e);
+						setForm(c => {
+							const { weight, heightFeet, heightIn } = c;
+							let bmi = calcBmi(weight, heightFeet, heightIn);
 
-							handleBlur(e);
-						}}
-					/>
-				</p>
-				<button type="submit" disabled={submitting}>
+							return { ...c, bmi };
+						});
+					}}
+					value={weight}
+					label="Weights"
+					className={classes.textField}
+					margin="normal"
+				/>
+				<Button variant="contained" className={classes.button} type="submit" disabled={submitting}>
 					Submit
-				</button>
+				</Button>
 			</form>
 			<div aria-live="polite">
 				<div aria-atomic="true">
