@@ -1,13 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { UserContext } from './firebase/FirebaseUser';
 import Status from './Status';
+import useInitialfocus from './hooks/useInitialFocus';
 
 const Home = () => {
 	const main = React.createRef(null);
-	useEffect(() => {
-		main.current.focus();
-		document.title = 'Home';
-	}, [main]);
+	useInitialfocus(main, 'Home');
 	const user = useContext(UserContext);
 	return (
 		<div>

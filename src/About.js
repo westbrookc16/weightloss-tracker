@@ -1,11 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import useInitialfocus from './hooks/useInitialFocus';
 const About = () => {
 	const main = React.createRef(null);
-
-	useEffect(() => {
-		document.title = 'abount';
-		main.current.focus();
-	}, [main]);
+	useInitialfocus(main, 'About');
 	return (
 		<div>
 			<h1 tabIndex="-1" ref={main}>

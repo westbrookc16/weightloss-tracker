@@ -1,17 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { FirebaseContext } from './firebase/firebase';
-
+import useInitialFocus from './hooks/useInitialFocus';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 const Signin = ({ history }) => {
 	const main = React.useRef(null);
 	const firebase = useContext(FirebaseContext);
 
-	useEffect(() => {
-		main.current.focus();
-		document.title = 'Sgin In';
-	}, []);
-
+	useInitialFocus(main, 'Sign In');
 	const uiConfig = {
 		// Popup signin flow rather than redirect flow.
 		//signInFlow: 'popup',

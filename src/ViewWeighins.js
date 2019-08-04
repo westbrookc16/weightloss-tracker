@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import moment from 'moment';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { UserContext } from './firebase/FirebaseUser';
 import { FirebaseContext } from './firebase/firebase';
+import useInitialfocus from './hooks/useInitialFocus';
 const Viewweighins = () => {
 	const main = React.createRef(null);
 	const user = useContext(UserContext);
@@ -14,10 +15,7 @@ const Viewweighins = () => {
 			.where('uid', '==', user.uid ? user.uid : '')
 			.orderBy('date')
 	);
-	useEffect(() => {
-		main.current.focus();
-		document.title = 'View Weighins';
-	}, [main]);
+	useInitialfocus(main, 'View Weigh-Ins');
 	return (
 		<div>
 			<h1 ref={main} tabIndex="-1">

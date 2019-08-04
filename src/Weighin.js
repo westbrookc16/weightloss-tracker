@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import useInitialFocus from './hooks/useInitialFocus';
 import { calcBmi } from './utils';
 import { FirebaseContext } from './firebase/firebase';
 import { UserContext } from './firebase/FirebaseUser';
@@ -44,12 +45,7 @@ const Weighin = () => {
 		year: moment().format('YYYY'),
 		month: moment().format('M'),
 	};
-
-	useEffect(() => {
-		document.title = 'Add Weigh-in';
-		main.current.focus();
-	}, []);
-	// this function is a promise where are using it part from here?
+	useInitialFocus(main, 'Add Weigh In');
 
 	const handleSubmitCallback = async () => {
 		//turn variables into numbers for firebase
