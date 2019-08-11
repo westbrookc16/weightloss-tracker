@@ -16,12 +16,13 @@ const About = lazy(() => import("./About"));
 const SignIn = lazy(() => import("./SignIn"));
 const ViewWeighIns = lazy(() => import("./ViewWeighins"));
 function App() {
+  const LoadingMessage = () => <>Loading...</>;
   return (
     <Container maxWidth="sm">
       <FirebaseContext.Provider value={new firebase()}>
         <FirebaseUser>
           <Router>
-            <Suspense fallback={() => <>Loading...</>}>
+            <Suspense fallback={<LoadingMessage />}>
               <Nav />
               <Box my={4}>
                 <Route path="/" exact component={Home} />
