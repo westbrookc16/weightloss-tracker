@@ -1,9 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import Alert from "@reach/alert";
 import { LiveMessage } from "react-aria-live";
 
 import useInitialFocus from "./hooks/useInitialFocus";
 
 import { UserContext } from "./firebase/FirebaseUser";
+import { weightReducer } from "./weightReducer";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
 import useForm from "./hooks/useForm";
@@ -49,14 +51,20 @@ const Weighin = () => {
   };
   useInitialFocus(main, "Add Weigh In");
 
-  const handleSubmitCallback = async form => {
+  const handleSubmitCallback = form => {
     dispatch({
       type: "addWeighin",
       data: { ...form },
       firebase,
       user
     });
+    setProgressMsg(`Weigh in added successfully.`);
+    setTimeout(() => {
+      setProgressMsg("");
+      setSuccess(true);
+    }, 5000);
   };
+
   const generateBmiMessage = bmi => {
     if (parseFloat(bmi) > 0) {
       return `Your BMI is ${parseFloat(bmi).toFixed(2)}`;
@@ -80,11 +88,16 @@ const Weighin = () => {
     dispatch,
     form,
     errors,
-    success,
+
     submitting,
     touched
-  } = useForm(handleSubmitCallback, validationCallback, initialValues);
-  //const [form, dispatch] = useReducer(weightReducer, initialValues);
+  } = useForm(
+    handleSubmitCallback,
+    validationCallback,
+    initialValues,
+    weightReducer
+  );
+  const [success, setSuccess] = useState(false);
   const errorMsgs = Object.keys(errors).map((field, i) => {
     if (touched[field]) return <li key={i}>{errors[field]}</li>;
     else return <div key={i} />;
@@ -111,6 +124,7 @@ const Weighin = () => {
     return <ul>{errorMsgs}</ul>;
   };
   const classes = useStyles();
+  const [progressMsg, setProgressMsg] = useState("");
   return (
     <div>
       {success && <Redirect to="/" />}
@@ -251,6 +265,7 @@ const Weighin = () => {
       <LiveMessage message={generateBmiMessage(form.bmi)} aria-live="polite" />
 
       <br />
+      <Alert>{progressMsg}</Alert>
       {generateErrorList()}
     </div>
   );

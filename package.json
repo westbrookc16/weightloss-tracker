@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.2.1",
+    "@reach/alert": "^0.1.5",
     "firebase": "^6.2.4",
     "moment": "^2.24.0",
     "react": "^16.8.6",

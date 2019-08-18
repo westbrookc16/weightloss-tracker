@@ -6,6 +6,7 @@ import TableCell from "@material-ui/core/TableCell";
 //import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { TableHead } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,17 +25,19 @@ const Status = ({ weight, bmi, difference }) => {
     <Paper className={classes.root}>
       <h1>Status</h1>
       <Table className={classes.table}>
-        <TableBody>
+        <TableHead>
           <TableRow>
             <TableCell>Current Weight</TableCell>
-            <TableCell>{weight}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell>Current BMI</TableCell>
-            <TableCell>{parseFloat(bmi).toFixed(2)}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell>Weight Loss Since Last Weigh In</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>{weight}</TableCell>
+
+            <TableCell>{parseFloat(bmi).toFixed(2)}</TableCell>
+
             <TableCell>{difference}</TableCell>
           </TableRow>
         </TableBody>

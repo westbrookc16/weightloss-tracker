@@ -1,8 +1,12 @@
 import { useState, useReducer } from "react";
-import { weightReducer } from "../weightReducer";
 
-const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
-  const [form, dispatch] = useReducer(weightReducer, initialValues);
+const useForm = (
+  handleSubmitCallback,
+  validateCallback,
+  initialValues,
+  formReducer
+) => {
+  const [form, dispatch] = useReducer(formReducer, initialValues);
   const [errors, setErrors] = useState({}); //for validtion errors
   const [success, setSuccess] = useState(false); //set to true if form was submitted successfully
   const [submitting, setSubmitting] = useState(false); //set to true when first submitting the form to disable the submit button
@@ -53,7 +57,8 @@ const useForm = (handleSubmitCallback, validateCallback, initialValues) => {
       //after I get a warning about trying to set state on an unmounted component.
       setSubmitting(false);
       console.log("no errors.");
-      setSuccess(await handleSubmitCallback());
+      handleSubmitCallback(form);
+      setSuccess(true);
     } else {
       setSubmitting(false);
       setSuccess(false);
