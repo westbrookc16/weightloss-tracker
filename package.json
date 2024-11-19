@@ -5,7 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.2.1",
     "@reach/alert": "^0.1.5",
-    "firebase": "^6.2.4",
+    "firebase": "^10.9.0",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-aria-live": "^2.0.5",
